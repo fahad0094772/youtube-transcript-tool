@@ -1,16 +1,532 @@
-<input id="url" placeholder="Paste YouTube URL">
-<button onclick="getTranscript()">Get Transcript</button>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Convert YouTube to Transcript - 100% Free & Easy!</title>
+  <meta name="description" content="Generate YouTube video transcripts online instantly for free. No sign-up required. Just paste your YouTube URL and get accurate text in seconds!">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+   <link rel="icon" href="{{ url_for('static', filename='images/fav2.png') }}" type="image/png">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&amp;display=swap" rel="stylesheet">
+  <link rel="canonical" href="https://u2btools.com/" />
+  <meta name="theme-color" content="#1e293b">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://analytics.ahrefs.com/analytics.js" data-key="Zu8KCz33eJq1cMM7iXg+5Q" async></script>
+  <style>
+    :root {
+      --bg: #f9fafb;
+      --card-bg: #ffffff;
+      --accent: #2563eb;
+      --cream: #1e293b;
+      --text-dark: #111827;
+      --muted: #6b7280;
+      --shadow: rgba(0, 0, 0, 0.06);
+      --radius: 12px;
+      --transition: all 0.3s ease-in-out;
+    }
 
-<pre id="result"></pre>
+     body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 400;
+      font-size: 18px;
+      line-height: 1.6;
+     
+      background-color: #f9f9f9;
+      color: #333;
+    }
 
+        h1, h2, h3, h4 {
+            font-weight: 700; /* Bold weight for headings */
+        }
+
+        p {
+            font-weight: 400; /* Regular weight for paragraphs */
+        
+    }
+   
+    .custom-navbar {
+      background: linear-gradient(90deg, #1E293B, #334155);
+      transition: var(--transition);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      z-index: 1000;
+    }
+    .custom-navbar.scrolled {
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+    .navbar-brand span {
+      color: #f9fafb;
+      font-size: 1.25rem;
+    }
+    .navbar-nav .nav-link {
+  color: #ffffff !important;
+  font-weight: 500;
+  padding: 8px 16px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  background-color: transparent;
+}
+
+.navbar-nav .nav-link:hover {
+  background-color: #2563eb;
+  color: #ffffff !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+.navbar-nav .nav-link.active {
+  background-color: #2563eb;
+  color: #fff !important;
+  box-shadow: 0 0 10px rgba(37, 99, 235, 0.4);
+}
+
+    .hero {
+      padding: 100px 0 80px; /* reduced bottom padding */
+      text-align: center;
+      background: linear-gradient(135deg, #1e293b, #334155);
+      color: #f1f5f9;
+    }
+
+    }
+    .hero h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+    }
+    .btn-accent {
+      background: var(--accent);
+      color: #fff;
+      transition: var(--transition);
+      border-radius: var(--radius);
+    }
+    .btn-accent:hover {
+      transform: scale(1.05);
+      background: #1d4ed8;
+    }
+    .section {
+      padding: 20px 0;
+    }
+    .card {
+      border: none;
+      border-radius: var(--radius);
+      background: var(--card-bg);
+      box-shadow: 0 4px 12px var(--shadow);
+      transition: var(--transition);
+    }
+    .feat-icon {
+      font-size: 2.5rem;
+      color: var(--accent);
+      margin-bottom: 1rem;
+    }
+    .feat-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 8px 24px var(--shadow);
+    }
+    textarea {
+      height: 400px;
+      resize: vertical;
+      background: #f8fafc;
+      border-radius: var(--radius);
+      padding: 1rem;
+      border: 1px solid #e5e7eb;
+    }
+    footer {
+      background: #1e293b;
+      color: #cbd5e1;
+      padding: 50px 0;
+      font-size: 0.95rem;
+    }
+    footer a {
+      color: #93c5fd;
+      text-decoration: none;
+      margin: 0 8px;
+    }
+    footer a:hover {
+      color: white;
+      text-decoration: underline;
+    }
+    .footer-btn {
+  display: inline-block;
+  background-color: #2563eb;
+  color: #ffffff;
+  padding: 10px 20px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.footer-btn:hover {
+  background-color: #1d4ed8;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+    .accordion-button {
+      font-weight: 600;
+      background-color: #f8fafc;
+      color: #1e293b;
+    }
+    .accordion-button:not(.collapsed) {
+      background-color: #e0f2fe;
+      color: #0c4a6e;
+    }
+    .accordion-body {
+      font-size: 1rem;
+      background: white;
+    }
+    .highlight {
+      color: var(--accent);
+      font-weight: 600;
+    }
+    .blog-image {
+  display: block;
+  max-width: 100%;
+  height: 500px;
+  border-radius: 1rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  margin: 2rem auto;
+  max-width: 900px;
+}
+
+    
+    .navbar-toggler {
+  border-color: rgba(255, 255, 255, 0.6);
+}
+
+.navbar-toggler-icon {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='%23ffffff' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(255, 255, 255, 0.9)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+
+  </style>
+</head>
+<body>
+
+
+  <nav class="navbar navbar-expand-lg custom-navbar fixed-top">
+  <div class="container">
+    <a class="navbar-brand d-flex align-items-center" href="#">
+      <img src="https://cdn-icons-png.flaticon.com/512/1384/1384060.png" alt="" width="32" class="me-2">
+      <span class="fw-bold fs-4">U2BTools</span>
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse justify-content-end" id="navMenu">
+      <ul class="navbar-nav ms-auto gap-lg-3 text-center">
+            <li class="nav-item"><a class="nav-link" href="about.html">About Us</a></li>
+             <li class="nav-item"><a class="nav-link" href="privacy.html">Privacy Policy</a></li>
+           <li class="nav-item"><a class="nav-link" href="terms.html">Terms & Conditions</a></li>
+           
+             <li class="nav-item"><a class="nav-link" href="contact.html">Contact Us</a></li>
+       
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Hero Section -->
+<section class="hero" id="transcribe" data-aos="fade-up">
+  <div class="container text-center">
+    <!-- U2BTools Logo -->
+    <div class="mb-4">
+      <img src="https://cdn-icons-png.flaticon.com/512/1384/1384060.png" alt="" width="64" class="me-2">
+      <span class="fs-2 fw-bold text-light align-middle">U2BTools</span>
+    </div>
+
+    <h1>Youtube to Transcript</h1>
+    <p>Create a YouTube transcript for free! Get access to transcripts in all languages, translate them into over 125 languages, and easily copy and edit them!</p>
+    
+    <form method="POST" class="row g-2 justify-content-center mt-4">
+      <div class="col-12 col-md-6">
+        <input type="text" name="video_url" class="form-control form-control-lg" placeholder="Paste YouTube URL..." required>
+      </div>
+      <div class="col-12 col-md-auto">
+        <button class="btn btn-success btn-lg w-100">Get Transcript</button>
+      </div>
+    </form>
+
+    <div id="loadingSpinner" class="text-center my-4" style="display: none;">
+      <div class="spinner-border text-primary" role="status"></div>
+      <p class="mt-2">Transcribing video... Please wait.</p>
+    </div>
+
+    {% if error %}
+    <div class="alert alert-danger w-50 mx-auto mt-4">{{ error }}</div>
+    {% endif %}
+  </div>
+</section>
+
+<!-- Transcript and Video -->
+<section class="section bg-white pt-0" id="features" data-aos="fade-up">
+
+  <div class="container">
+    {% if video_id and transcript %}
+    <div class="row g-4 align-items-stretch">
+      <div class="col-md-6 d-flex">
+        <div class="card p-3 w-100 h-100">
+          <div class="video-container" style="height: 100%;">
+            <iframe src="https://www.youtube.com/embed/{{ video_id }}" allowfullscreen style="width: 100%; height: 100%; border: 0;"></iframe>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 d-flex">
+        <div class="card p-4 w-100 h-100 d-flex flex-column">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h4 class="mb-0">Transcript <small class="text-muted fs-6">({{ lang_name }})</small></h4>
+            <div>
+              <button class="btn btn-sm btn-secondary me-2" onclick="copyTranscript()">ðŸ“‹ Copy</button>
+            </div>
+          </div>
+          <textarea id="transcriptBox" readonly class="flex-grow-1">{{ transcript }}</textarea>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+</section>
+
+<!-- Features -->
+
+<!-- SEO Content -->
+<section class="section py-5" id="seo-content">
+  <div class="container">
+    <div class="row ">
+      <div class="col-md-6 mb-4 mb-md-0">
+        <img src="/static/images/yt1.png" alt="youtube to transcript" class="img-fluid rounded shadow">
+      </div>
+      <div class="col-md-6">
+        <p>
+          Struggling with YouTube Transcripts? Get It Accurately & Free! Transcribing YouTube videos accurately can be tough, but with the right tool, you can ensure every word is captured correctly. It's a fast process that lets you get the YouTube transcript done in seconds, improving efficiency and saving time. Plus, the included timestamps make it easy to access and download your YouTube transcripts for future reference, boosting your productivity.
+        </p></div></div>
+
+    <h2 class="mt-5">Effortlessly Generate YouTube Transcripts with Copy and Translation Features! ðŸš€</h2>
+    <p>With the new YouTube transcript tool, you can effortlessly extract and copy the transcript from any video. Powerful features also allow easy sharing and learning. For an overview of how transcripts and captions work natively on YouTube, you can also check out <a href="https://support.google.com/youtube/answer/6373554?hl=en">YouTube`s official support guide</a>  Plus, you can use the translation feature to make content accessible in multiple languages, simplifying the process of creating and sharing knowledge with others.</p>
+
+    <h3 class="mt-5">New Features ðŸ˜Ž</h3>
+    <p>The new YouTube to transcript tool allows you to easily remove unwanted sections like sponsored segments, intros, and outros to keep only the content you need. With a free AI prompt library, you can access various prompts to generate summaries, notes, and creative content from your transcript. Additionally, the translation feature lets you choose a language and translate your transcript into over 125 languages, expanding your reach globally.</p>
+
+    <h2 class="mt-5">How to Generate a YouTube Transcript ðŸŽ¥</h2>
+    <p>Paste the video link and click "Get Transcript." Customize the transcript by removing unwanted sections or selecting a preferred language. Explore the AI Prompt Library to take your transcript to the next level and use the Change Language Button to translate it into 125 languages.</p>
+    <p>Once the transcript is ready, view it in an Embedded Player side by side with the video. Use the Copy Button to copy the transcript with one click, and then download the transcript text with timestamps.</p>
+    <p>No need to enter your emailâ€”simply paste the URL from the address bar or right-click to Copy Video URL and upload it for quick access and usage.</p>
+
+    <h2 class="mt-5">Why you need YouTube Transcript? ðŸ¤”</h2>
+     <div class="row ">
+     
+      <div class="col-md-6">
+    <p>You can easily extract transcripts from YouTube videos, making it simple for note-takers to follow along with the content. This eliminates the challenge of writing notes while watching, as you can copy and paste the text into your notes or tools like ChatGPT and other AI tools for quick analysis. For podcasts, Speech to Text tools like a chrome extension make it easy to transcribe meetings from platforms like Google Meet, Zoom, MS Teams, and Webex, offering live transcription with speaker identification.</p>
+    <h3>Efficient Learning and Research
+</h3>
+    <p>Using these free online tools, you can transcribe lengthy videos in seconds, with the added benefit of cloud storage for future reference. This makes learning easier and more efficient for students, researchers, content creators, and professionals. Whether youâ€™re looking to create show notes, blog posts, articles, or even social media posts from educational videos or seminars, you can reuse the transcript for better engagement.</p>
+    <h3>Enhance Engagement and Expand Reach</h3>
+    <p>Additionally, the ability to translate the transcript into your native language and summarize it into key points helps to broaden your audience and increase visibility across search engines and social media. Tools that support closed captions, summarizing, and generating Infographics and Quiz questions ensure you stay organized while managing research effectively.</p>
+</div>
+ <div class="col-md-6 mb-4 mb-md-0">
+        <img src="/static/images/yt2.png" alt="youtube to transcript" class="img-fluid rounded shadow">
+      </div>
+</div>
+    <h2 class="mt-5">Pair YouTube Transcripts with AI tools ðŸ¤–</h2>
+    <p>Pair YouTube transcripts with AI tools for enhanced content creation and learning.</p>
+    <p>Generate summaries and notes from the transcript.</p>
+    <p>Use AI tools to extract key points, making it easier to create questions and answers for quizzes or fan quizzes.</p>
+    <p>Generate video content using the transcript, allowing for seamless repurposing.</p>
+    <p>Extract powerful quotes from the video or transcript for use in memes, infographics, or trivia.</p>
+    <p>Leverage AI to turn information into engaging and shareable content, improving how you learn and interact with videos.</p>
+    <p>Create content and generate ideas for more engaging content through these AI-driven tools.</p>
+
+    <h2 class="mt-5">FAQ</h2>
+    <div class="accordion" id="faqAccordion">
+      <div class="accordion-item">
+        <h4 class="accordion-header" id="q1">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#a1" aria-expanded="false" aria-controls="a1">
+            How Do I Transcribe a YouTube Video to Text?
+          </button>
+        </h4>
+        <div id="a1" class="accordion-collapse collapse" aria-labelledby="q1" data-bs-parent="#faqAccordion">
+          <div class="accordion-body">
+            To transcribe a YouTube video to text, open the video and click the three dots below it. Select Show transcript from the menu. If not available, you can paste the URL into a transcript tool and click Get Video Transcript to get the text transcript with timestamps.
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <h4 class="accordion-header" id="q2">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#a2" aria-expanded="false" aria-controls="a2">
+            YouTube to Transcript: Is it Free to Use?
+          </button>
+        </h4>
+        <div id="a2" class="accordion-collapse collapse" aria-labelledby="q2" data-bs-parent="#faqAccordion">
+          <div class="accordion-body">
+            Yes, YouTube to Transcript is completely free. You can extract subtitles and transcripts from YouTube videos at no cost, making it a quick and easy tool for anyone to use.
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <h4 class="accordion-header" id="q3">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#a3" aria-expanded="false" aria-controls="a3">
+            Can I Translate the Transcript to Other Languages?
+          </button>
+        </h4>
+        <div id="a3" class="accordion-collapse collapse" aria-labelledby="q3" data-bs-parent="#faqAccordion">
+          <div class="accordion-body">
+            Yes, you can translate your YouTube transcript into over 125 languages using the Change Language button to select your desired language. This makes it easy to access subtitles in multiple languages.
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <h4 class="accordion-header" id="q4">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#a4" aria-expanded="false" aria-controls="a4">
+            Is There a Limit to the Length of the Video I Can Transcribe?
+          </button>
+        </h4>
+        <div id="a4" class="accordion-collapse collapse" aria-labelledby="q4" data-bs-parent="#faqAccordion">
+          <div class="accordion-body">
+            There are no limits on the length of the video you can transcribe. Whether the duration is short or long, the tool can handle videos of various lengths seamlessly without any limitations. This means you can easily transcribe videos of any size without worrying about restrictions.
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <h4 class="accordion-header" id="q5">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#a5" aria-expanded="false" aria-controls="a5">
+            How Long Does it Take to Generate the Transcript?
+          </button>
+        </h4>
+        <div id="a5" class="accordion-collapse collapse" aria-labelledby="q5" data-bs-parent="#faqAccordion">
+          <div class="accordion-body">
+            The transcript is generated almost instantly after you paste the YouTube video link and click the "Get Transcript" button. Within seconds, youâ€™ll have your transcript ready to use, making it a fast and efficient process.
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <h4 class="accordion-header" id="q6">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#a6" aria-expanded="false" aria-controls="a6">
+            Can I Download the Transcript?
+          </button>
+        </h4>
+        <div id="a6" class="accordion-collapse collapse" aria-labelledby="q6" data-bs-parent="#faqAccordion">
+          <div class="accordion-body">
+            Currently, there is no download option available for the transcript directly from our platform. However, you can easily copy the transcript and paste it into your preferred document or application for further use. We are planning to support this feature in the future, so stay tuned for updates.
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <h4 class="accordion-header" id="q7">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#a7" aria-expanded="false" aria-controls="a7">
+            What Are YouTube Subtitles?
+          </button>
+        </h4>
+        <div id="a7" class="accordion-collapse collapse" aria-labelledby="q7" data-bs-parent="#faqAccordion">
+          <div class="accordion-body">
+            YouTube subtitles are a translation of the audio in a video into another language. These subtitles are typically displayed below the video player, and the viewer can easily turn them on or turn them off based on their preference. Subtitles are especially helpful for people who are learning a new language or watching a video in a language they do not understand, making it easier to understand the content.
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <h4 class="accordion-header" id="q8">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#a8" aria-expanded="false" aria-controls="a8">
+            How accurate are the transcriptions?
+          </button>
+        </h4>
+        <div id="a8" class="accordion-collapse collapse" aria-labelledby="q8" data-bs-parent="#faqAccordion">
+          <div class="accordion-body">
+            Achieving 100% accuracy in transcriptions is challenging, as it depends on factors like audio quality, speech clarity, accents, and background noise, but advanced AI tools can get close with minimal errors. Ask ChatGPT
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <h4 class="accordion-header" id="q9">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#a9" aria-expanded="false" aria-controls="a9">
+            Is YouTube Video Transcript Generator Available for Free?
+          </button>
+        </h4>
+        <div id="a9" class="accordion-collapse collapse" aria-labelledby="q9" data-bs-parent="#faqAccordion">
+          <div class="accordion-body">
+            Yes, the YouTube video transcript generator is available for free. You can transcribe any YouTube video into text using automatic speech recognition technology. While the transcripts may not always be 100% accurate, they are usually good enough for general purposes. Additionally, there are no limits to the number of transcripts you can generate, so you can transcribe as many YouTube videos as needed.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</section>
+
+
+<!-- Footer -->
+<!-- Bootstrap Icons -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
+<!-- Footer -->
+<footer>
+  <div class="container text-center">
+   
+    
+    <div class="mb-3">
+     <a href="mailto:fa931467@gmail.com" class="footer-btn">ðŸ“© Contact Us</a>
+
+    </div>
+     <p>Â© 2025 U2BTools. Built by Fahad Ali.</p>
+  </div>
+</footer>
+
+<!-- Scripts -->
 <script>
-function getTranscript(){
- let url=document.getElementById("url").value;
+  document.querySelector("form").addEventListener("submit", function () {
+    document.getElementById("loadingSpinner").style.display = "block";
+  });
+  function copyTranscript() {
+    navigator.clipboard.writeText(document.getElementById("transcriptBox").value).then(() => alert("Copied!"));
+  }
+  
+  window.addEventListener('scroll', () => {
+    const nav = document.querySelector('.custom-navbar');
+    nav.classList.toggle('scrolled', window.scrollY > 20);
+  });
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>AOS.init({ duration: 800, once: true });</script>
 
- fetch("https://yourtool.onrender.com/transcript?url="+url)
- .then(res=>res.json())
- .then(data=>{
- document.getElementById("result").innerText=data.transcript;
- });
+  <script>
+    window.addEventListener("load", () => {
+      const preloader = document.getElementById("preloader");
+      preloader.classList.add("hidden");
+    });
+  </script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://u2btools.com/"
+  },
+  "headline": "Youtube to Transcript",
+  "image": "https://u2btools.com/static/images/yt1.png",  
+  "author": {
+    "@type": "Person",
+    "name": "Fahad Ali"
+  },  
+  "publisher": {
+    "@type": "Organization",
+    "name": "",
+    "logo": {
+      "@type": "ImageObject",
+      "url": ""
+    }
+  },
+  "datePublished": "",
+  "dateModified": "2025-07-13"
 }
 </script>
+
+</body>
+
+</html>
