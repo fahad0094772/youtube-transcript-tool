@@ -23,16 +23,9 @@ def index():
             return render_template("tool.html", transcript=transcript_text, error=error, lang_name=lang_name, video_id=video_id)
 
       try:
-    transcript_data = YouTubeTranscriptApi.get_transcript(video_id)
-    transcript_text = "\n".join([line['text'] for line in transcript_data])
-    lang_name = "Auto"
-except TranscriptsDisabled:
-    error = "Transcripts are disabled for this video."
-except NoTranscriptFound:
-    error = "No transcript found for this video."
-except Exception as e:
-    error = f"Error: {str(e)}"
-            # First try manually created, then auto-generated
+  transcript_data = YouTubeTranscriptApi.get_transcript(video_id)
+transcript_text = "\n".join([line['text'] for line in transcript_data])
+lang_name = "Auto"
             try:
                 transcript = transcript_list.find_manually_created_transcript(
                     [t.language_code for t in transcript_list])
